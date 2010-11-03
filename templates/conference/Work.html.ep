@@ -17,14 +17,14 @@ Work.$inject=['$resource'];
 Work.prototype = {
 	hash_change: function() {
 		var id = this.$location.hashPath;
-console.debug( 'hash_change', id, this.work._id );
+// console.debug( 'hash_change', id, this.work._id );
 		if ( id != this.work._id ) {
 			if (id) this.work = this.Work.get({ _id: id })
 			else this.reset();
 		}
 	},
 	reset: function() {
-		console.debug( this.Work );
+		//console.debug( this.Work );
 		var symposium = null;
 		if ( this.work && this.work.type == 'symposium' ) symposium = this.work.symposium;
 		this.work = new this.Work( this.master );
@@ -32,7 +32,7 @@ console.debug( 'hash_change', id, this.work._id );
 			this.work.symposium = symposium;
 			this.work.type = 'symposium';
 		}
-console.debug( 'reset', symposium, this.work, this.$location.hashPath );
+//console.debug( 'reset', symposium, this.work, this.$location.hashPath );
 		this.$location.hashPath = '';
 	},
 	save: function(){
@@ -46,97 +46,232 @@ console.debug( 'reset', symposium, this.work, this.$location.hashPath );
 
 </script>
 
-<h1>Prijava rada</h1>
+<style type="text/css">
+
+body {
+	background: #F6F6F6;
+	margin: 40px;
+	font-family: Arial;
+	color: #374E5A;
+	font-size: 14px;
+	line-height: 16px;
+}
+label, h2 {
+	color: #D74F25;
+	color: #374E5A;
+	color: #afafaf;
+	display: block;
+	margin-top: 10px;
+	margin-bottom: 4px;
+	font-size: 14px;
+	font-family: Arial;
+}
+
+h2 {
+	margin-top: 40px;
+	color: #374E5A;
+	color: #D74F25;
+}
+label {
+	color: #374E5A;
+}
+
+.label0, .label1, .label2, .label3, .label4 {
+	color: #afafaf;
+	float: left;
+}
+
+.label0 {
+}
+
+.label1 {
+	padding-left: 4px;
+	width: 19%;
+}
+.label2 {
+	width: 19%;
+}
+
+.label3 {
+	width: 40%;
+}
+
+.label4 {
+	width: 19%
+}
+
+.symposium, .work {
+	width: 640px;
+}
+
+input.name, input.surname, input.email {
+	width: 18%;
+}
+
+input.inst {
+	width: 30%;
+}
+
+input.stitle {
+	width: 96%;
+}
+
+#authors {
+	clear: left;
+	margin-bottom: 6px;
+}
+
+.authors-label {
+	margin-top: 8px;
+}
+
+.addNew {
+	float: right;
+}
+
+input, textarea
+{
+	font: 14px arial;
+	color: #000000;
+	border: solid 1px #dedede;
+	padding: 6px;
+	background: #f6f6f6;
+}
+
+input:focus, textarea:focus
+{
+	
+	background: #ffffff;
+	font-family: arial;
+	color: #000000;
+	border: 1px solid #46d0fe;
+}
+
+input.ng-validation-error {
+	border: 1px solid #D74F25;
+	border: 1px solid #FF6666;
+}
+
+.warrning {
+	color: #FF6666;
+}
+
+.save {
+	margin-top: 10px;
+}
+
+.save input 
+{
+	float: left;
+	color: #ffffff;
+	display: block;
+	text-decoration: none;
+	background: #d74f25;
+}
+
+.save input:hover
+{
+	background: #dc6844;
+}
+
+.newWork {
+	clear: left;
+	margin-top: 50px;
+}
+
+</style>
+<h1>Prijava radova</h1>
 
 <div ng:controller="Work" ng:init="$window.$root = this">
 
-<h2>Vrsta rada:</h2>
-<input type="radio" name="work.type" value="symposium"> Simpozij
+<h2>Odaberite vrstu sudjelovanja:</h2>
+	<input type="radio" name="work.type" value="symposium"> Simpozij <br/>
 
-<div ng:show="work.type == 'symposium'" style="background:#f0f0f0">
+	<input type="radio" name="work.type" value="lecture"> Predavanje <br>
+	<input type="radio" name="work.type" value="poster"> Poster <br>
+	<input type="radio" name="work.type" value="round"> Okrugli stol <br>
+
+
+
+
+<div class="symposium" ng:show="work.type == 'symposium'">
 <!--
 <select name="work.symposium_id" ng:show="work.type == 'symposium'" ng:controller="Symposium">
 <option ng:repeat="s in symposiums" value="{{s._id}}">{{s.title}}</option>
 </select>
 -->
 
-Tema simpozija: <input name="work.symposium.title" size="60"><br/>
-   
-Sažetak: <br/>
-<textarea name="work.symposium.abstract" cols="50" rows="5"></textarea> <br/>
-
-Organizator:
-<div ng:repeat="author in work.symposium.authors">
-[<a href="" ng:click="work.symposium.authors.$remove(author)">X</a>]
-<input name="author.name" ng:required>
-<input name="author.surname" ng:required>
-<input name="author.inst" >
-<input name="author.email" ng:required>
-</div>
-[<a href="" ng:click="work.symposium.authors.$add()">Add another organizer</a>]
-
-</div>
-
-<br/>
-
-	<input type="radio" name="work.type" value="lecture"> Predavanje <br/>
-	<input type="radio" name="work.type" value="poster"> Poster <br/>
-	<input type="radio" name="work.type" value="round"> Okrugli stol <br/>
-
-<hr>
-
-<h2>Autori rada</h2>
-
-<div ng:repeat="author in work.authors">
-[<a href="" ng:click="work.authors.$remove(author)">X</a>]
-<input name="author.name" ng:required>
-<input name="author.surname" ng:required>
-<input name="author.inst" >
-<input name="author.email" ng:required>
-</div>
-[<a href="" ng:click="work.authors.$add()">Add another author</a>]
+	<h2>Podaci o simpoziju</h2>
+	
+	<label>Tema:</label>
+		<input class="stitle" name="work.symposium.title" ng:required><br/>
+	
+	<label>Organizator:</label>
+	<div ng:repeat="author in work.symposium.authors" ng:required>
 <!--
-
-    <table>
-      <tr>
-        <th> </th>
-        <th>Ime</th>
-        <th>Prezime</th>
-        <th>Ustanova</th>
-        <th>email</th>
-      </tr>
-      <tr ng:repeat="author in work.authors">
-        <td>[<a href="" ng:click="work.authors.$remove(author)">X</a>]</td>
-        <td><input name="author.name" ng:required></td>
-        <td><input name="author.surname" ng:required></td>
-        <td><input name="author.inst" ></td>
-        <td><input name="author.email" ng:required></td>
-      </tr>
-      <tr>
-        <td> </td>
-        <td>[<a href="" ng:click="work.authors.$add()">Add another author</a>]</td>
-        <td> </td>
-        <td> </td>
-        <td> </td>
-      </tr>
-    </table>
-
+	[<a href="" ng:click="work.symposium.authors.$remove(author)">X</a>]
+-->
+	<input class="name" name="author.name" ng:required>
+	<input class="surname" name="author.surname" ng:required>
+	<input class="inst" name="author.inst" >
+	<input class="email" name="author.email" ng:required>
+	</div>
+<!--
+	[<a href="" ng:click="work.symposium.authors.$add()">Add another organizer</a>]
 -->
 
-<hr>    
+	   
+	<label>Sažetak:</label>
+	<textarea name="work.symposium.abstract" cols="50" rows="5"></textarea> <br/>
+
+</div>
+
+<div ng:show="work.type != ''" class="work">
+	<h2 ng:show="work.type == 'symposium'">Podaci o radu unutar simpozija <span style="font-weight: normal; color: #000000">"{{work.symposium.title}}"</span></h2>
+	<h2 ng:show="work.type == 'lecture'">Podaci o usmenom izlaganju</h2>
+	<h2 ng:show="work.type == 'poster'">Podaci o posteru</h2>
+	<h2 ng:show="work.type == 'round'">Podaci o okruglom stolu</h2>
 
 
-   Naslov: <input name="work.title" size="60"><br/>
+<label>Autor(i):</label>
+<div class="authors-label">
+	<div class="label0"> </div><div class="label1">Ime</div><div class="label2">Prezime</div><div class="label3">Ustanova</div><div class="label4">E-pošta</div>
+</div>
+<div id="authors" ng:repeat="author in work.authors">
+	<input class="name" name="author.name" ng:required>
+	<input class="surname" name="author.surname" ng:required>
+	<input class="inst" name="author.inst" >
+	<input class="email" name="author.email" ng:required>
+	[<a href="" ng:click="work.authors.$remove(author)"> X </a>]
+</div>
+<div class="addNew">
+	[<a href="" ng:click="work.authors.$add()">Dodaj još jednog autora</a>]
+</div>
 
-   Sazetak: <br/>
-    <textarea name="work.abstract" cols="50" rows="5"></textarea> <br/>
-    <input type="submit" value="Save" ng:click="work.symposium_id=symposium._id; save();" disabled="{{$invalidWidgets}}">
-    <input type="reset" value="Novi rad" ng:click="reset()">
 
-	<div ng:show="work._id">
+	<label>Naslov:</label>
+		<input name="work.title" size="60"><br/>
+
+	<label>Sažetak:</label>
+	    <textarea name="work.abstract" cols="50" rows="5"></textarea> <br/>
+
+<div class="save">
+    <input type="submit" value="Spremi promjene!" ng:click="work.symposium_id=symposium._id; save();" disabled="{{$invalidWidgets}}" >
+    <span class="warrning" ng:show="work && work._id">Promjene su spremljene. Možete unjeti sljedeći rad ili završiti unos.</span>
+</div>
+<div class="newWork">
+    <input type="reset" value="Dodaj novi rad" ng:click="reset()" ng:show="work">
+    <input type="reset" value="Završi unos" ng:click="reset()" ng:show="work && work._id">
+</div>
+
+</div>
+
+<br><br>
+	<div ng:show="work && work._id == ''">
 	<a href="#{{work._id}}">permalink to {{work.title}}</a>
 	</div>
 
+<div style="clear: left; margin-top: 60px;"> 
 <hr>
 Debug Information:
 {{$window.location.href}}
@@ -148,5 +283,6 @@ $id={{$id}}
 work.$id={{work.$id}}
 work._id={{work._id}}
 </pre>
+</div>
 
 </div>
