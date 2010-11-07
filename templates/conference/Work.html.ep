@@ -248,7 +248,7 @@ input.ng-validation-error {
 	<label>Summary:</label>
 		<textarea name="work.symposium.abstract" class="summary"></textarea>
 	
-	<div ng:show="work.type == 'symposium'" class="sworks">
+	<div ng:show="work.type == 'symposium' && symposium.works" class="sworks">
 	Submitted works:
 	<ol>
 		<li ng:repeat="w in symposium.works"><a href="#{{w._id}}">{{w.title}}</a></li>
