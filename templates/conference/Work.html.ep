@@ -78,88 +78,222 @@ console.debug( 'reset', current_symposium, this.work, this.$location.hashPath );
 
 </script>
 
+<style type="text/css">
+
+body {
+	background: #F6F6F6;
+	margin: 40px;
+	font-family: Arial;
+	color: #374E5A;
+	font-size: 14px;
+	line-height: 16px;
+}
+label, h2 {
+	display: block;
+	color: #D74F25;
+	color: #374E5A;
+	color: #afafaf;
+	margin-top: 10px;
+	font-size: 14px;
+	font-family: Arial;
+	font-weight: normal;
+}
+
+h2 {
+	margin-top: 40px;
+	color: #374E5A;
+	color: #D74F25;
+}
+
+a {
+	color: #D74F25;
+	font-size: 80%;
+}
+
+.symposium, .work {
+	width: 615px;
+}
+
+label {
+	color: #374E5A;
+}
+
+.authors-label .name, .authors-label .surname, .authors-label .inst, .authors-label .email {
+	color: #afafaf;
+	float: left;
+	margin: 2px;
+	padding: 0 6px;
+}
+
+.name, .surname, .email {
+	width: 18%;
+}
+
+.inst {
+	width: 30%;
+}
+
+.title, .summary {
+	width: 96%;
+}
+
+.authors {
+	clear: both;
+	margin-bottom: 6px;
+}
+
+.authors-label {
+	clear: right;
+}
+
+
+
+.addNew {
+	padding-right: 30px;
+}
+
+input, textarea
+{
+	font: 14px arial;
+	color: #000000;
+	border: solid 1px #dedede;
+	padding: 6px;
+	background: #f6f6f6;
+}
+
+input:focus, textarea:focus
+{
+	
+	background: #ffffff;
+	font-family: arial;
+	color: #000000;
+	border: 1px solid #46d0fe;
+}
+
+input.ng-validation-error {
+	border: 1px solid #D74F25;
+	border: 1px solid #FF6666;
+	border: 1px solid #FF9966;
+	border: 1px solid #EDC8BC;
+}
+
+.warrning {
+	color: #FF6666;
+}
+
+.sworks {
+	margin-top: 20px;
+}
+
+.save {
+	margin-top: 10px;
+}
+
+.save input 
+{
+	float: left;
+	color: #ffffff;
+	display: block;
+	text-decoration: none;
+	background: #d74f25;
+}
+
+.save input:hover
+{
+	background: #dc6844;
+}
+
+.newWork {
+	clear: left;
+	margin-top: 50px;
+}
+</style>
+
 <h1>Conference work submission</h1>
 
 <div ng:controller="Work" ng:init="$window.$root = this;">
 
 <h2>Type of work:</h2>
-<label><input type="radio" name="work.type" value="symposium"> Symposium</label>
+<input type="radio" name="work.type" value="symposium"> Symposium<br/>
+<input type="radio" name="work.type" value="lecture"> Lecture<br/>
+<input type="radio" name="work.type" value="poster"> Poster<br/>
+<input type="radio" name="work.type" value="round"> Round table<br/>
 
-<div ng:show="work.type == 'symposium'" style="background:#f0f0f0">
+
+<div ng:show="work.type == 'symposium'" class="symposium">
 <!--
 <select name="work.symposium_id" ng:show="work.type == 'symposium'" ng:controller="Symposium">
 <option ng:repeat="s in symposiums" value="{{s._id}}">{{s.title}}</option>
 </select>
 -->
-
-<label>Topic of symposium: <input name="work.symposium.title" size="60" ng:required></label><br/>
-   
-<label>Summary: <br/>
-<textarea name="work.symposium.abstract" cols="50" rows="5"></textarea>
-</label>
-<br/>
-
-Organizer:
-<div ng:repeat="author in work.symposium.organizer">
-[<a href="" ng:click="work.symposium.organizer.$remove(author)">X</a>]
-<input name="author.name" ng:required>
-<input name="author.surname" ng:required>
-<input name="author.inst" >
-<input name="author.email" ng:required>
-</div>
-[<a href="" ng:click="work.symposium.organizer.$add()">Add another organizer</a>]
-
-</div>
-
-<br/>
-
-<label><input type="radio" name="work.type" value="lecture"> Lecture</label><br/>
-<label><input type="radio" name="work.type" value="poster"> Poster</label><br/>
-<label><input type="radio" name="work.type" value="round"> Round table</label><br/>
-
-<hr>
-
-<div ng:show="symposium">
-Works which are part of this symposium:
-<ol>
-<li ng:repeat="w in symposium.works"><a href="#{{w._id}}">{{w.title}}</a></li>
-</ol>
-
+	<h2>Symposium data</h2>
+	<label>Organizer:</label>
+	<div class="authors-label">
+		<div class="name">First name</div><div class="surname">Surname</div><div class="inst">Institution</div><div class="email">E-mail</div>
+	</div>
+	<div ng:repeat="author in work.symposium.organizer">
+		<input class="name" name="author.name" ng:required>
+		<input class="surname" name="author.surname" ng:required>
+		<input class="inst" name="author.inst" >
+		<input class="email" name="author.email" ng:required>
+		<a href="" ng:click="work.symposium.organizer.$remove(author)">X</a>
+		<div class="addNew">
+			<a href="" ng:click="work.symposium.organizer.$add()">Add another organizer</a>
+		</div>
+	</div>
+	<label>Topic:</label>
+		<input class="title" name="work.symposium.title" ng:required>
+	<label>Summary:</label>
+		<textarea name="work.symposium.abstract" class="summary"></textarea>
+	
+	<div ng:show="work.type == 'symposium'" class="sworks">
+	Submitted works:
+	<ol>
+		<li ng:repeat="w in symposium.works"><a href="#{{w._id}}">{{w.title}}</a></li>
+	</ol>
+	</div>
 </div>
 
-<h2>Autors<span ng:show="work.type == 'symposium'"> of {{work.symposium.work_nr}}. work </span></h2>
+<div class="work">
+	<h2>Submit work <span ng:show="work.type == 'symposium'">no. {{work.symposium.work_nr}} in symposium <span style="font-weight: normal">{{work.symposium.title}}</span></span></h2>
+	<label>Autors</span>
+	<div class="authors-label">
+		<div class="name">First name</div><div class="surname">Surname</div><div class="inst">Institution</div><div class="email">E-mail</div>
+	</div>
+	<div ng:repeat="author in work.authors">
+		<input class="name" name="author.name" ng:required>
+		<input class="surname" name="author.surname" ng:required>
+		<input class="inst" name="author.inst" >
+		<input class="email" name="author.email" ng:required>
+		<a href="" ng:click="work.authors.$remove(author)">X</a>
+	</div>
+	<div class="addNew">
+		<a href="" ng:click="work.authors.$add()">Add another author</a>
+	</div>
+	<label>Title:</label>
+		<input class="title" name="work.title" ng:required>
 
-<div ng:repeat="author in work.authors">
-[<a href="" ng:click="work.authors.$remove(author)">X</a>]
-<input name="author.name" ng:required>
-<input name="author.surname" ng:required>
-<input name="author.inst" >
-<input name="author.email" ng:required>
+	<label>Abstract:</label>
+		<textarea class="summary" name="work.abstract"></textarea>
+	<br/>
+
+	<div class="save">
+		<span ng:show="$invalidWidgets.visible() == 0">
+		<input class="save" type="submit" value="Save" ng:click="work.symposium_id=symposium._id; save();" ng:show="! last_saved_work.$equals(work)">
+		<input type="reset" value="Add another work" ng:click="reset()" ng:show="work && work._id">
+		</span>
+	</div>
+
+	<div ng:show="$invalidWidgets.visible() &gt; 0">Please fill all requered fields ({{$invalidWidgets.visible()}} fields left).</div>
+
 </div>
-[<a href="" ng:click="work.authors.$add()">Add another author</a>]
 
-<hr>    
-
-
-<label>Title: <input name="work.title" size="60" ng:required></label><br/>
-
-<label>Summary:<br>
-<textarea name="work.abstract" cols="50" rows="5"></textarea>
-</label>
-<br/>
-
-<span ng:show="$invalidWidgets.visible() == 0">
-<input type="submit" value="Save" ng:click="work.symposium_id=symposium._id; save();" ng:show="! last_saved_work.$equals(work)">
-<input type="reset" value="Add another work" ng:click="reset()" ng:show="work && work._id">
-</span>
-
-<b ng:show="$invalidWidgets.visible() &gt; 0" style="color:#800">{{$invalidWidgets.visible()}} errors to fix in submission form</b>
+<hr style="clear: both; margin-top: 50px">
 
 <div ng:show="work._id">
 Permalink to <a href="#{{work._id}}">{{work.title}}</a> which you can bookmark
 </div>
 
-<hr>
 Debug Information:
 {{$window.location.href}}
 <pre>
